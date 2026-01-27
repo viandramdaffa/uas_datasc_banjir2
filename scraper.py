@@ -3,6 +3,7 @@ import requests
 import streamlit as st
 import datetime
 
+# DAFTAR 50 KOTA (Sama seperti sebelumnya)
 KOTA_PILIHAN = [
     {"nama": "Jakarta Pusat", "lat": -6.1805, "lon": 106.8284},
     {"nama": "Jakarta Selatan", "lat": -6.2615, "lon": 106.8106},
@@ -61,14 +62,14 @@ def get_weather_data():
     
     for i, kota in enumerate(KOTA_PILIHAN):
         try:
-            url = f"https://api.open-meteo.com/v1/forecast?latitude={kota['lat']}&longitude={kota['lon']}&hourly=rain,weathercode&timezone=auto"
+            url = f"https://api.open-meteo.com/v1/forecast?latitude={kota['lat']}&longitude={kota['lon']}&hourly=precipitation,weathercode&timezone=auto"
             
             response = requests.get(url, timeout=10)
             data = response.json()
             
             hourly = data['hourly']
             times = hourly['time']
-            rains = hourly['rain']
+            rains = hourly['precipitation'] 
             codes = hourly['weathercode']
             
             for j in range(len(times)):
