@@ -58,12 +58,11 @@ KOTA_PILIHAN = [
 @st.cache_data(ttl=3600)
 def get_weather_data():
     all_data = []
-    # UI Progress Bar
     bar = st.progress(0, text="Menghubungkan ke satelit Open-Meteo...")
     
     for i, kota in enumerate(KOTA_PILIHAN):
         try:
-            # Force Timezone Asia/Jakarta
+
             url = f"https://api.open-meteo.com/v1/forecast?latitude={kota['lat']}&longitude={kota['lon']}&hourly=precipitation,weathercode&timezone=Asia%2FJakarta"
             
             response = requests.get(url, timeout=10)
