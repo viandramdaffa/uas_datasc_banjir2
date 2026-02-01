@@ -49,22 +49,39 @@ with st.spinner("Mengunduh data cuaca (JSON API)..."):
         view_df['Prioritas'] = view_df['Status_Risiko'].apply(get_priority)
         map_data = view_df.sort_values(['Prioritas', 'Curah_Hujan_mm'], ascending=[False, False]).drop_duplicates('Kota')
         
+        # --- METRICS ---
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Total Data Diolah", f"{len(final_df)} Rows", "JSON Source")
         
-        jml_bahaya = len(map_data[map_data['Prioritas'] == 3])
-        jml_waspada = len(map_data[map_data['Prioritas'] == 2])
+        jml_merah = len(map_data[map_data['Status_Aktivitas'] == 3])
+        jml_kuning = len(map_data[map_data['Status_Aktivitas'] == 2])
+        jml_hijau = len(map_data[map_data['Status_Aktivitas'] == 1])
         
-        if jml_bahaya > 0:
-            col2.metric("Status Bahaya 🔴", f"{jml_bahaya} Kota", "Potensi Badai/Banjir", delta_color="inverse")
+        col1.metric("Total Kota Terpantau", f"{len(map_data)} Kota", "Big Data Scope")
+        
+        if jml_merah > 0:
+            col2.metric("Zona Tidak Kondusif 🌧️", f"{jml_merah} Kota", "Hindari Outdoor", delta_color="inverse")
         else:
-            col2.metric("Status Waspada 🟠", f"{jml_waspada} Kota", "Hujan Sedang")
-        
-        terdekat = view_df.loc[view_df['Jarak_KM'].idxmin()]
-        col3.metric(f"Lokasi Anda", terdekat['Kota'], f"Jarak: {terdekat['Jarak_KM']} KM")
-        
-        max_rain = view_df.loc[view_df['Curah_Hujan_mm'].idxmax()]
-        col4.metric("Hujan Terderas", f"{max_rain['Curah_Hujan_mm']} mm", max_rain['Kota'])
+            col2.metric("Cuaca Mendukung 🌤️", f"{jml_hijau} Kota", "Aman Beraktivitas")
+            
+        # --- PERBAIKAN ANTI-CRASH (SABUK PENGAMAN) ---
+        if not view_df.empty:
+            # Hanya hitung jika data TIDAK KOSONG
+            terdekat = view_df.loc[view_df['Jarak_KM'].idxmin()]
+            
+            # Logic status user
+            status_user = "Aman"
+            if terdekat.get('Prioritas') == 3: status_user = "BAHAYA (Tunda Aktivitas)" # Pakai .get biar aman
+            elif terdekat.get('Prioritas') == 2: status_user = "WASPADA (Sedia Payung)"
+            else: status_user = "KONDUSIF"
+            
+            col3.metric(f"Kondisi {terdekat['Kota']}", f"{terdekat['Curah_Hujan_mm']} mm", status_user)
+            
+            max_rain = view_df.loc[view_df['Curah_Hujan_mm'].idxmax()]
+            col4.metric("Pusat Hujan Tertinggi", f"{max_rain['Curah_Hujan_mm']} mm", max_rain['Kota'])
+        else:
+            # Jika data kosong (karena beda jam server), tampilkan strip "-"
+            col3.metric("Lokasi Anda", "-", "Data Belum Tersedia")
+            col4.metric("Pusat Hujan", "-", "Sedang Memuat...")
 
         tab1, tab2, tab3 = st.tabs(["🗺️ Peta Sebaran", "📊 Statistik Analisis", "📋 Database"])
         
