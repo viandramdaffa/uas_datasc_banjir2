@@ -10,7 +10,7 @@ st.set_page_config(page_title="Indo Flood Watch", page_icon="🌧️", layout="w
 
 st.title("Sistem Prediksi Cuaca Sebagai Panduan Aktivitas Masyarakat")
 st.markdown("""
-Menggunakan teknik *JSON API Scraping* di 50 Kota
+Menggunakan teknik *JSON API Scraping* di 50 Kota di Indonesia
 """)
 
 # --- SIDEBAR ---
@@ -135,10 +135,12 @@ with st.spinner("Mengunduh data cuaca (JSON API)..."):
                 status_counts = map_data['Status_Risiko'].value_counts()
                 
                 color_map = {
-                    "BAHAYA (Potensi Banjir)": "#ff4b4b", 
-                    "WASPADA (Hujan)": "#ffa500", 
-                    "AMAN (Berawan/Cerah)": "#4caf50"
+
+                    "BAHAYA (Potensi Banjir/ Hujan Badai)": "#ff4b4b",  
+                    "WASPADA (Hujan)": "#ffa500",                       
+                    "AMAN (Berawan/Cerah)": "#4caf50"                   
                 }
+                
                 actual_colors = [color_map.get(x, '#999999') for x in status_counts.index]
                 
                 fig1, ax1 = plt.subplots(figsize=(6, 4))
