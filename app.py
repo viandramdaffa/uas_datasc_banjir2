@@ -12,7 +12,7 @@ st.set_page_config(page_title="Indo Activity Weather", page_icon="is", layout="w
 # --- HEADER ---
 st.title("Sistem Prediksi Cuaca Sebagai Panduan Aktivitas Masyarakat")
 st.markdown("""
-**Decision Support System (DSS) Berbasis Big Data Meteorologi**
+**Big Data Meteorologi**
 Menggunakan teknik *JSON API Scraping* pada 50 Kota di Indonesia untuk rekomendasi aktivitas harian.
 """)
 
