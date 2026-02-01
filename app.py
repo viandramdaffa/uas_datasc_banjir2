@@ -22,7 +22,7 @@ user_lat = st.sidebar.number_input("Latitude", value=-6.8868, format="%.4f")
 user_lon = st.sidebar.number_input("Longitude", value=107.6152, format="%.4f")
 hari_opsi = st.sidebar.selectbox("Pilih Jadwal Kegiatan:", ["Hari Ini", "Besok", "Lusa"])
 
-if st.sidebar.button("Scan Satelit Cuaca", type="primary"):
+if st.sidebar.button("Refresh", type="primary"):
     st.cache_data.clear()
     st.rerun()
 
